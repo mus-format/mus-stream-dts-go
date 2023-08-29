@@ -1,7 +1,7 @@
 # mus-stream-dts-go
 mus-stream-dts-go provides DTM (**D**ata **T**ype **M**etadata) support for the 
 [mus-stream-go](https://github.com/mus-format/mus-stream-go) serializer. With 
-mus-stream-dts-go, we can encode/decode DTM + data itself.
+mus-stream-dts-go we can encode/decode DTM + data itself.
 
 It completely repeats the structure of [mus-dts-go](https://github.com/mus-format/mus-dts-go), 
 and differs only in that it uses `Writer`, `Reader` interfaces rather than а 
