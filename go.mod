@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/mus-format/common-go v0.0.0-20230828235912-098b21ff73ae
-	github.com/mus-format/mus-stream-go v0.1.3
+	github.com/mus-format/mus-stream-go v0.1.4
 )
 
 require (
