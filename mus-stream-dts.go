@@ -11,23 +11,23 @@ func New[T any](dtm com.DTM, m muss.Marshaller[T], u muss.Unmarshaller[T],
 	return DTS[T]{dtm, m, u, s}
 }
 
-// DTS provides data type metadata support for the mus-go serializer.
+// DTS provides data type metadata (DTM) support for the mus-stream-go
+// serializer. It helps to encode DTM + data.
 //
-// It implements muss.Marshaller, muss.Unmarshaller and muss.Sizer interfaces.
+// Implements muss.Marshaller, muss.Unmarshaller and muss.Sizer interfaces.
 type DTS[T any] struct {
 	dtm com.DTM
-
-	m muss.Marshaller[T]
-	u muss.Unmarshaller[T]
-	s muss.Sizer[T]
+	m   muss.Marshaller[T]
+	u   muss.Unmarshaller[T]
+	s   muss.Sizer[T]
 }
 
-// DTM returns a data type metadata.
+// DTM returns the value with which DTS was initialized.
 func (dts DTS[T]) DTM() com.DTM {
 	return dts.dtm
 }
 
-// MarshalMUS marshals DTM and data to the MUS format.
+// MarshalMUS marshals DTM + data.
 func (dts DTS[T]) MarshalMUS(t T, w muss.Writer) (n int, err error) {
 	n, err = MarshalDTMUS(dts.dtm, w)
 	if err != nil {
@@ -39,9 +39,9 @@ func (dts DTS[T]) MarshalMUS(t T, w muss.Writer) (n int, err error) {
 	return
 }
 
-// UnmarshalMUS unmarshals DTM and data from the MUS format.
+// UnmarshalMUS unmarshals DTM + data.
 //
-// Returns ErrWrongDTM if DTM from bs is different.
+// Returns ErrWrongDTM if the unmarshalled DTM differs from the dts.DTM().
 func (dts DTS[T]) UnmarshalMUS(r muss.Reader) (t T, n int, err error) {
 	dtm, n, err := UnmarshalDTMUS(r)
 	if err != nil {
@@ -57,13 +57,13 @@ func (dts DTS[T]) UnmarshalMUS(r muss.Reader) (t T, n int, err error) {
 	return
 }
 
-// SizeMUS calculates the DTM and data size in the MUS format.
+// SizeMUS calculates the size of the DTM + data.
 func (dts DTS[T]) SizeMUS(t T) (size int) {
 	size = SizeDTMUS(dts.dtm)
 	return size + dts.s.SizeMUS(t)
 }
 
-// UnmarshalMUS unmarshals data without DTM from the MUS format.
+// UnmarshalData unmarshals only data.
 func (dts DTS[T]) UnmarshalDataMUS(r muss.Reader) (t T, n int, err error) {
 	return dts.u.UnmarshalMUS(r)
 }
