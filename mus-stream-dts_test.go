@@ -81,7 +81,7 @@ func TestDTS(t *testing.T) {
 			}
 		})
 
-	t.Run("MarshalMUS, UnmarshalDTMUS, UnmarshalDataMUS, SizeMUS methods should work correctly",
+	t.Run("MarshalMUS, UnmarshalDTM, UnmarshalData, SizeMUS methods should work correctly",
 		func(t *testing.T) {
 			var (
 				wantDTSize = 1
@@ -101,7 +101,7 @@ func TestDTS(t *testing.T) {
 			if n != size {
 				t.Fatalf("unexpected n, want '%v' actual '%v'", size, n)
 			}
-			dtm, n, err := UnmarshalDTMUS(buf)
+			dtm, n, err := UnmarshalDTM(buf)
 			if err != nil {
 				t.Errorf("unexpected error, want '%v' actual '%v'", nil, err)
 			}
@@ -111,7 +111,7 @@ func TestDTS(t *testing.T) {
 			if dtm != FooDTM {
 				t.Errorf("unexpected dtm, want '%v' actual '%v'", FooDTM, dtm)
 			}
-			afoo, n, err := fooDTS.UnmarshalDataMUS(buf)
+			afoo, n, err := fooDTS.UnmarshalData(buf)
 			if err != nil {
 				t.Errorf("unexpected error, want '%v' actual '%v'", nil, err)
 			}
@@ -157,7 +157,7 @@ func TestDTS(t *testing.T) {
 			}
 		})
 
-	t.Run("If MarshalDTMUS fails with an error, MarshalMUS should return it",
+	t.Run("If MarshalDTM fails with an error, MarshalMUS should return it",
 		func(t *testing.T) {
 			var (
 				wantErr = errors.New("write byte error")
@@ -172,7 +172,7 @@ func TestDTS(t *testing.T) {
 			}
 		})
 
-	t.Run("If UnmarshalDTMUS fails with an error, UnmarshalMUS should return it",
+	t.Run("If UnmarshalDTM fails with an error, UnmarshalMUS should return it",
 		func(t *testing.T) {
 			var (
 				wantErr = errors.New("read byte error")
@@ -196,7 +196,7 @@ func TestDTS(t *testing.T) {
 			}
 		})
 
-	t.Run("If varint.UnmarshalInt fails with an error, UnmarshalDTMUS should return it",
+	t.Run("If varint.UnmarshalInt fails with an error, UnmarshalDTM should return it",
 		func(t *testing.T) {
 			var (
 				wantErr = errors.New("read byte error")
@@ -206,7 +206,7 @@ func TestDTS(t *testing.T) {
 						return
 					},
 				)
-				dtm, n, err = UnmarshalDTMUS(r)
+				dtm, n, err = UnmarshalDTM(r)
 			)
 			if err != wantErr {
 				t.Errorf("unexpected error, want '%v' actual '%v'", io.EOF, err)

@@ -6,11 +6,11 @@ import (
 	"github.com/mus-format/mus-stream-go/varint"
 )
 
-func MarshalDTMUS(dtm com.DTM, w muss.Writer) (n int, err error) {
+func MarshalDTM(dtm com.DTM, w muss.Writer) (n int, err error) {
 	return varint.MarshalInt(int(dtm), w)
 }
 
-func UnmarshalDTMUS(r muss.Reader) (dtm com.DTM, n int, err error) {
+func UnmarshalDTM(r muss.Reader) (dtm com.DTM, n int, err error) {
 	num, n, err := varint.UnmarshalInt(r)
 	if err != nil {
 		return
@@ -19,6 +19,6 @@ func UnmarshalDTMUS(r muss.Reader) (dtm com.DTM, n int, err error) {
 	return
 }
 
-func SizeDTMUS(dtm com.DTM) (size int) {
+func SizeDTM(dtm com.DTM) (size int) {
 	return varint.SizeInt(int(dtm))
 }
