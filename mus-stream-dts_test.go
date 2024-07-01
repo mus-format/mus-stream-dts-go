@@ -27,7 +27,7 @@ func MarshalFooMUS(foo Foo, w muss.Writer) (n int, err error) {
 		return
 	}
 	var n1 int
-	n1, err = ord.MarshalString(foo.str, w)
+	n1, err = ord.MarshalString(foo.str, nil, w)
 	n += n1
 	return
 }
@@ -38,14 +38,14 @@ func UnmarshalFooMUS(r muss.Reader) (foo Foo, n int, err error) {
 		return
 	}
 	var n1 int
-	foo.str, n1, err = ord.UnmarshalString(r)
+	foo.str, n1, err = ord.UnmarshalString(nil, r)
 	n += n1
 	return
 }
 
 func SizeFooMUS(foo Foo) (size int) {
 	size = varint.SizeInt(foo.num)
-	return size + ord.SizeString(foo.str)
+	return size + ord.SizeString(foo.str, nil)
 }
 
 func TestDTS(t *testing.T) {
