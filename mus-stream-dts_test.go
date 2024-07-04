@@ -21,7 +21,7 @@ type Foo struct {
 	str string
 }
 
-func MarshalFooMUS(foo Foo, w muss.Writer) (n int, err error) {
+func MarshalFoo(foo Foo, w muss.Writer) (n int, err error) {
 	n, err = varint.MarshalInt(foo.num, w)
 	if err != nil {
 		return
@@ -32,7 +32,7 @@ func MarshalFooMUS(foo Foo, w muss.Writer) (n int, err error) {
 	return
 }
 
-func UnmarshalFooMUS(r muss.Reader) (foo Foo, n int, err error) {
+func UnmarshalFoo(r muss.Reader) (foo Foo, n int, err error) {
 	foo.num, n, err = varint.UnmarshalInt(r)
 	if err != nil {
 		return
@@ -43,33 +43,33 @@ func UnmarshalFooMUS(r muss.Reader) (foo Foo, n int, err error) {
 	return
 }
 
-func SizeFooMUS(foo Foo) (size int) {
+func SizeFoo(foo Foo) (size int) {
 	size = varint.SizeInt(foo.num)
 	return size + ord.SizeString(foo.str, nil)
 }
 
 func TestDTS(t *testing.T) {
 
-	t.Run("MarshalMUS, UnmarshalMUS, SizeMUS methods should work correctly",
+	t.Run("Marshal, Unmarshal, Size methods should work correctly",
 		func(t *testing.T) {
 			var (
 				foo    = Foo{num: 11, str: "hello world"}
 				fooDTS = New[Foo](FooDTM,
-					muss.MarshallerFn[Foo](MarshalFooMUS),
-					muss.UnmarshallerFn[Foo](UnmarshalFooMUS),
-					muss.SizerFn[Foo](SizeFooMUS),
+					muss.MarshallerFn[Foo](MarshalFoo),
+					muss.UnmarshallerFn[Foo](UnmarshalFoo),
+					muss.SizerFn[Foo](SizeFoo),
 				)
-				size = fooDTS.SizeMUS(foo)
+				size = fooDTS.Size(foo)
 				buf  = bytes.NewBuffer(make([]byte, 0, size))
 			)
-			n, err := fooDTS.MarshalMUS(foo, buf)
+			n, err := fooDTS.Marshal(foo, buf)
 			if err != nil {
 				t.Fatal(err)
 			}
 			if n != size {
 				t.Fatalf("unexpected n, want '%v' actual '%v'", size, n)
 			}
-			afoo, n, err := fooDTS.UnmarshalMUS(buf)
+			afoo, n, err := fooDTS.Unmarshal(buf)
 			if err != nil {
 				t.Errorf("unexpected error, want '%v' actual '%v'", nil, err)
 			}
@@ -81,20 +81,20 @@ func TestDTS(t *testing.T) {
 			}
 		})
 
-	t.Run("MarshalMUS, UnmarshalDTM, UnmarshalData, SizeMUS methods should work correctly",
+	t.Run("Marshal, UnmarshalDTM, UnmarshalData, Size methods should work correctly",
 		func(t *testing.T) {
 			var (
 				wantDTSize = 1
 				foo        = Foo{num: 11, str: "hello world"}
 				fooDTS     = New[Foo](FooDTM,
-					muss.MarshallerFn[Foo](MarshalFooMUS),
-					muss.UnmarshallerFn[Foo](UnmarshalFooMUS),
-					muss.SizerFn[Foo](SizeFooMUS),
+					muss.MarshallerFn[Foo](MarshalFoo),
+					muss.UnmarshallerFn[Foo](UnmarshalFoo),
+					muss.SizerFn[Foo](SizeFoo),
 				)
-				size = fooDTS.SizeMUS(foo)
+				size = fooDTS.Size(foo)
 				buf  = bytes.NewBuffer(make([]byte, 0, size))
 			)
-			n, err := fooDTS.MarshalMUS(foo, buf)
+			n, err := fooDTS.Marshal(foo, buf)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -133,7 +133,7 @@ func TestDTS(t *testing.T) {
 		}
 	})
 
-	t.Run("UnamrshalMUS should fail with ErrWrongDTM, if meets another DTM",
+	t.Run("Unamrshal should fail with ErrWrongDTM, if meets another DTM",
 		func(t *testing.T) {
 			var (
 				wantDTSize = 1
@@ -144,7 +144,7 @@ func TestDTS(t *testing.T) {
 					},
 				)
 				fooDTS      = New[Foo](FooDTM, nil, nil, nil)
-				foo, n, err = fooDTS.UnmarshalMUS(r)
+				foo, n, err = fooDTS.Unmarshal(r)
 			)
 			if err != ErrWrongDTM {
 				t.Errorf("unexpected error, want '%v' actual '%v'", ErrWrongDTM, err)
@@ -157,7 +157,7 @@ func TestDTS(t *testing.T) {
 			}
 		})
 
-	t.Run("If MarshalDTM fails with an error, MarshalMUS should return it",
+	t.Run("If MarshalDTM fails with an error, Marshal should return it",
 		func(t *testing.T) {
 			var (
 				wantErr = errors.New("write byte error")
@@ -166,13 +166,13 @@ func TestDTS(t *testing.T) {
 				})
 				fooDTS = New[Foo](FooDTM, nil, nil, nil)
 			)
-			_, err := fooDTS.MarshalMUS(Foo{}, w)
+			_, err := fooDTS.Marshal(Foo{}, w)
 			if err != wantErr {
 				t.Errorf("unexpected error, want '%v' actual '%v'", wantErr, err)
 			}
 		})
 
-	t.Run("If UnmarshalDTM fails with an error, UnmarshalMUS should return it",
+	t.Run("If UnmarshalDTM fails with an error, Unmarshal should return it",
 		func(t *testing.T) {
 			var (
 				wantErr = errors.New("read byte error")
@@ -183,7 +183,7 @@ func TestDTS(t *testing.T) {
 					},
 				)
 				fooDTS      = New[Foo](FooDTM, nil, nil, nil)
-				foo, n, err = fooDTS.UnmarshalMUS(r)
+				foo, n, err = fooDTS.Unmarshal(r)
 			)
 			if err != wantErr {
 				t.Errorf("unexpected error, want '%v' actual '%v'", io.EOF, err)

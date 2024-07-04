@@ -3,8 +3,8 @@ module github.com/mus-format/mus-stream-dts-go
 go 1.20
 
 require (
-	github.com/mus-format/common-go v0.0.0-20240427160332-fda7f59c1da2
-	github.com/mus-format/mus-stream-go v0.3.0
+	github.com/mus-format/common-go v0.0.0-20240704141923-ea7d12c7eed3
+	github.com/mus-format/mus-stream-go v0.4.1
 )
 
 require (
