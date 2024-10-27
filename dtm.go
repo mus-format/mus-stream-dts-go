@@ -7,11 +7,11 @@ import (
 )
 
 func MarshalDTM(dtm com.DTM, w muss.Writer) (n int, err error) {
-	return varint.MarshalInt(int(dtm), w)
+	return varint.MarshalPositiveInt(int(dtm), w)
 }
 
 func UnmarshalDTM(r muss.Reader) (dtm com.DTM, n int, err error) {
-	num, n, err := varint.UnmarshalInt(r)
+	num, n, err := varint.UnmarshalPositiveInt(r)
 	if err != nil {
 		return
 	}
@@ -20,5 +20,9 @@ func UnmarshalDTM(r muss.Reader) (dtm com.DTM, n int, err error) {
 }
 
 func SizeDTM(dtm com.DTM) (size int) {
-	return varint.SizeInt(int(dtm))
+	return varint.SizePositiveInt(int(dtm))
+}
+
+func SkipDTM(r muss.Reader) (n int, err error) {
+	return varint.SkipPositiveInt(r)
 }
