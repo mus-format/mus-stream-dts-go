@@ -11,4 +11,4 @@ slice of bytes.
 Test coverage is 100%.
 
 # How To Use
-You can learn more about this in the mus-dts-go [documentation](https://github.com/mus-format/mus-dts-go#how-to-use).
+You can learn more about this in the mus-dts-go [documentation](https://github.com/mus-format/mus-dts-go).

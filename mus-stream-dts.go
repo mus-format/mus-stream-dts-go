@@ -7,8 +7,10 @@ import (
 
 // New creates a new DTS.
 func New[T any](dtm com.DTM, m muss.Marshaller[T], u muss.Unmarshaller[T],
-	s muss.Sizer[T]) DTS[T] {
-	return DTS[T]{dtm, m, u, s}
+	s muss.Sizer[T],
+	sk muss.Skipper,
+) DTS[T] {
+	return DTS[T]{dtm, m, u, s, sk}
 }
 
 // DTS provides data type metadata (DTM) support for the mus-stream-go
@@ -20,6 +22,7 @@ type DTS[T any] struct {
 	m   muss.Marshaller[T]
 	u   muss.Unmarshaller[T]
 	s   muss.Sizer[T]
+	sk  muss.Skipper
 }
 
 // DTM returns the value with which DTS was initialized.
@@ -63,7 +66,29 @@ func (dts DTS[T]) Size(t T) (size int) {
 	return size + dts.s.Size(t)
 }
 
+// Skip skips DTM + data.
+//
+// Returns ErrWrongDTM if the unmarshalled DTM differs from the dts.DTM().
+func (dts DTS[T]) Skip(r muss.Reader) (n int, err error) {
+	dtm, n, err := UnmarshalDTM(r)
+	if err != nil {
+		return
+	}
+	if dtm != dts.dtm {
+		err = ErrWrongDTM
+		return
+	}
+	n1, err := dts.SkipData(r)
+	n += n1
+	return
+}
+
 // UnmarshalData unmarshals only data.
 func (dts DTS[T]) UnmarshalData(r muss.Reader) (t T, n int, err error) {
 	return dts.u.Unmarshal(r)
+}
+
+// SkipData skips only data.
+func (dts DTS[T]) SkipData(r muss.Reader) (n int, err error) {
+	return dts.sk.Skip(r)
 }
