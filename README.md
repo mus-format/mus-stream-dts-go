@@ -1,14 +1,15 @@
 # mus-stream-dts-go
-mus-stream-dts-go provides DTM (Data Type Metadata) support for the 
-[mus-stream-go](https://github.com/mus-format/mus-stream-go) serializer. With 
-mus-stream-dts-go we can encode/decode DTM + data itself.
 
-It completely repeats the structure of [mus-dts-go](https://github.com/mus-format/mus-dts-go), 
-and differs only in that it uses `Writer`, `Reader` interfaces rather than а 
-slice of bytes.
+[![Go Reference](https://pkg.go.dev/badge/github.com/mus-format/mus-stream-dts-go.svg)](https://pkg.go.dev/github.com/mus-format/mus-stream-dts-go)
+[![GoReportCard](https://goreportcard.com/badge/mus-format/mus-stream-dts-go)](https://goreportcard.com/report/github.com/mus-format/mus-stream-dts-go)
+[![codecov](https://codecov.io/gh/mus-format/mus-stream-dts-go/graph/badge.svg?token=LDDAIPEWBI)](https://codecov.io/gh/mus-format/mus-stream-dts-go)
 
-# Tests
-Test coverage is 100%.
+mus-stream-dts-go provides [DTM](https://medium.com/p/21d7be309e8d support for the 
+mus-stream-go serializer.
+
+mus-stream-dts-go is a streaming version of [mus-dts-go](https://github.com/mus-format/mus-dts-go).
+It has the same structure, but uses the `Writer` and `Reader` interfaces instead
+of byte slices.
 
 # How To Use
 You can learn more about this in the mus-dts-go [documentation](https://github.com/mus-format/mus-dts-go).
