@@ -11,5 +11,5 @@ mus-stream-dts-go is a streaming version of [mus-dts-go](https://github.com/mus-
 It has the same structure, but uses the `Writer` and `Reader` interfaces instead
 of byte slices.
 
-# How To Use
+# How To
 You can learn more about this in the mus-dts-go [documentation](https://github.com/mus-format/mus-dts-go).
